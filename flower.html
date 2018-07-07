@@ -1,0 +1,88 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="css/generative.css"/>
+		<script src="js/generative.js"></script>
+		<script src="js/CCaptureall.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			  <canvas id="canvas" class="drawing"></canvas>
+			<div class="capture" onclick="captcha()">रिकॉर्डिंग करें</div>
+		</div>
+		
+	</body>
+	<script>
+		var flag=true;
+		
+		var capturer = new CCapture( {
+			framerate: 30,
+			verbose: true,
+			format : 'webm'
+		});
+
+		function captcha(){
+			if(flag)
+			{
+				capturer.start();
+				document.getElementsByClassName("capture")[0].innerHTML = "रिकॉर्डिंग रोकें";
+			}
+			else
+			{
+				capturer.stop();
+				capturer.save();
+				document.getElementsByClassName("capture")[0].innerHTML = "रिकॉर्डिंग करें";
+			}
+			
+			
+			flag=false;
+			
+		}
+		
+		const canvas = document.getElementById("canvas");
+		let w = canvas.width = document.getElementById('canvas').clientWidth;
+		let h = canvas.height = document.getElementById('canvas').clientHeight;
+		const ctx = canvas.getContext("2d");	
+	
+		const x_o = w/2;
+		const y_o = h/2; 
+
+	
+		
+		let call_petals = scale => n => p => epoch => color => brush =>
+		{
+			ctx.lineWidth = brush;
+			
+			for(let i=1;i<=n;i++){ 	
+				let theta =  i*2*Math.PI/n + epoch;
+				par_curve(t=>t*scale*Math.cos(theta) - Math.pow(t,p)*scale*Math.sin(theta))(t=>Math.pow(t,p)*scale*Math.cos(theta) + t*scale*Math.sin(theta))(0)(1)(0.01)(color);
+				theta = i*2*Math.PI/n - epoch;
+				par_curve(t=>Math.pow(t,p)*scale*Math.cos(theta) + t*scale*Math.sin(theta))(t=>t*scale*Math.cos(theta) -Math.pow(t,p)*scale*Math.sin(theta))(0)(1)(0.01)(color);		
+			}
+			
+		}
+		
+		const transform_point = x_y => theta => [x_y[0]*Math.cos(theta) - x_y[1]*Math.sin(theta), x_y[1]*Math.cos(theta)  + x_y[0]*Math.sin(theta)] 
+
+		
+		let temp =0;
+		const animate = () => {
+		temp+=0.01;
+		ctx.clearRect(0,0,w,h);
+		
+		requestAnimationFrame(animate);
+		ctx.fillStyle = "black";
+		ctx.fillRect(0,0,w,h);	
+		ctx.shadowBlur = 30;
+	
+		call_petals(30)(6)(6)(temp)("red")(0.5);
+		call_petals(80)(8)(6)(-temp*1.5)("green")(0.5);
+		call_petals(130)(12)(6)(temp*2)("blue")(0.5);
+
+
+		capturer.capture( canvas );
+	
+		}
+		animate();
+
+	</script>
+</html>

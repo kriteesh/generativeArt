@@ -1,0 +1,46 @@
+	html,body{
+				margin:0;
+				width: 100%;
+				height : 100%;
+				overflow: hidden;
+				background : black;
+			}
+			.container{
+				display: grid;
+				grid-template-rows: 90vh 10vh;
+				grid-template-columns: 10vw 80vw 10vw;
+				grid-template-areas: 'drawing drawing drawing' 
+									 'capture capture capture';
+				width: 100%;
+				height : 100%;
+				overflow: hidden;
+				align-items: center;
+			}
+			.capture{
+				grid-area: capture;
+				color : white;
+				text-align: center;
+				cursor:pointer;
+				width : 100%;
+				text-decoration: none;
+				text-align: center;
+				font-size : 3em;
+				padding: 10px;
+				text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FFDD1B, 0 0 70px #FFDD1B, 0 0 80px #FFDD1B, 0 0 100px #FFDD1B, 0 0 150px #FFDD1B;
+				z-index: 2;
+				animation : animate 1s linear infinite;
+			}
+			@keyframes animate{
+				from{
+					color:transparent;
+				}
+				to{
+					color : white;
+				}
+			}
+			
+			.drawing{
+				grid-area:drawing;
+				width:100%;
+				height:100%;
+			}
