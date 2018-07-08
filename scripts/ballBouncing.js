@@ -1,6 +1,6 @@
 let canvas  = document.querySelector("canvas");
-let w = canvas.width = document.getElementsByClassName("main")[0].clientWidth;
-let h = canvas.height = document.getElementsByClassName("main")[0].clientHeight;
+let w = canvas.width = document.getElementsByClassName("drawing")[0].clientWidth;
+let h = canvas.height = document.getElementsByClassName("drawing")[0].clientHeight;
 let ctx = canvas.getContext("2d");
 			
 let x_o = w/2;
