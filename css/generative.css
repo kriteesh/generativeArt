@@ -23,6 +23,7 @@
 				cursor:pointer;
 				width : 100%;
 				text-decoration: none;
+				user-select: none;
 				text-align: center;
 				font-size : 3em;
 				padding: 10px;

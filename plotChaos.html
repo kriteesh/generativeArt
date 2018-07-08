@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Language" content="hi">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Chaos tri-directional</title>
+			<link rel="stylesheet" href ="css/generative.css"/>
+			<script src="scripts/generative.js"></script>
+		<script src="scripts/CCaptureall.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			  <canvas id="canvas" class="drawing"></canvas>
+			<div class="capture" onclick="captcha()">रिकॉर्डिंग करें</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		
+		var flag=true;
+		
+		var capturer = new CCapture( {
+			framerate: 30,
+			verbose: true,
+			format : 'gif'
+		});
+
+		function captcha(){
+			if(flag)
+			{
+				capturer.start();
+				document.getElementsByClassName("capture")[0].innerHTML = "रिकॉर्डिंग रोकें";
+			}
+			else
+			{
+				capturer.stop();
+				capturer.save();
+				document.getElementsByClassName("capture")[0].innerHTML = "रिकॉर्डिंग करें";
+			}
+			
+			
+			flag=false;
+			
+		}
+			
+		let canvas  = document.querySelector("canvas");
+		let w = canvas.width = document.getElementsByClassName("drawing")[0].clientWidth;
+		let h = canvas.height = document.getElementsByClassName("drawing")[0].clientHeight;
+		let ctx = canvas.getContext("2d");
+				
+		let x_o = w/2;
+		let y_o = h/2;
+		let background =() =>{
+			ctx.fillStyle ="black";
+			ctx.fillRect(0,0,w,h);
+			}
+			
+		let chaos = r => initial => n => { if(n==0) return initial.map(x=>Math.round(x*h));  else return chaos(r)(initial.concat(initial.slice(-1)*r*(1-initial.slice(-1))))(n-1); }
+			
+		let plotPoints = iter => r => { let arr = chaos(r)([0.5])(100); if(iter<arr.length) {let x = r*150 ; let y = arr[iter]; ctx.fillStyle = "white"; ctx.shadowBlur = "2"; ctx.shadowColor ="yellow";ctx.fillRect(x_o,y,1,1); ctx.fillRect(y,y_o,1,1); ctx.fillRect(w - y,y_o,1,1); plotPoints(iter+1)(r);}}
+
+			
+		let temp = 0;
+		let animate = () =>{
+			ctx.clearRect(0,0,w,h);
+			requestAnimationFrame(animate);
+			background();
+			if(temp<4) plotPoints(0)(temp);
+			else temp=0;
+			capturer.capture( canvas );
+			
+			temp+=0.01;
+					
+			}
+			
+		animate();		
+	</script>
+</html>
